@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>SAP-1 | Interactive Simulator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">S<span>1</span></span><span>SAP<span class="brand-light">·</span>LAB<small>COMPUTER ARCHITECTURE SIMULATOR</small></span></a>
+    <div class="top-meta"><span class="live-dot"></span> INTERACTIVE ENVIRONMENT <span class="version">v1.0</span></div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> LEARN · EXECUTE · VISUALIZE</div>
+        <h1>Inside the <span>machine.</span></h1>
+        <p class="hero-copy">Explore how a Simple-As-Possible computer processes instructions, moves data, and performs arithmetic — one cycle at a time.</p>
+      </div>
+      <div class="hero-chip"><span class="chip-icon">◈</span><div><b>8-BIT</b><small>DATA ARCHITECTURE</small></div></div>
+    </section>
+
+    <section class="control-layout">
+      <article class="panel program-panel">
+        <div class="section-heading"><div><span class="section-kicker">01 / PROGRAM SETUP</span><h2>Load your program</h2></div><span class="step-number">INPUT</span></div>
+        <p class="muted">Enter hexadecimal values for the three memory operands.</p>
+        <div class="input-grid">
+          <label>VALUE A <span>ADDRESS 9H</span><input id="value1" value="25" maxlength="2" autocomplete="off"></label>
+          <label>VALUE B <span>ADDRESS AH</span><input id="value2" value="05" maxlength="2" autocomplete="off"></label>
+          <label>VALUE C <span>ADDRESS BH</span><input id="value3" value="23" maxlength="2" autocomplete="off"></label>
+        </div>
+        <div class="formula"><span>FORMULA</span><strong>A + B − C</strong><b id="formulaPreview">25H + 05H − 23H</b></div>
+        <button class="btn btn-primary" id="loadBtn"><span>↧</span> Load program <span class="btn-arrow">↗</span></button>
+      </article>
+
+      <article class="panel status-panel">
+        <div class="section-heading"><div><span class="section-kicker">02 / EXECUTION CONTROL</span><h2>CPU controls</h2></div><span class="status-pill" id="statePill"><i></i> READY</span></div>
+        <div class="control-buttons">
+          <button class="btn btn-secondary" id="stepBtn"><span>Ⅱ</span> Step</button>
+          <button class="btn btn-run" id="runBtn"><span>▶</span> Run</button>
+          <button class="btn btn-ghost" id="resetBtn"><span>↺</span> Reset</button>
+        </div>
+        <div class="progress-wrap"><div class="progress-label"><span>PROGRAM PROGRESS</span><b id="progressText">0 / 5</b></div><div class="progress-track"><div id="progressBar"></div></div></div>
+        <div class="status-message" id="status">System ready. Load a program to begin execution.</div>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <div class="section-heading section-title"><div><span class="section-kicker">03 / PROCESSOR STATE</span><h2>CPU registers</h2></div><span class="live-label"><i></i> LIVE VALUES</span></div>
+      <div class="register-grid">
+        <div class="register-card"><div class="reg-top"><span>PROGRAM COUNTER</span><b>PC</b></div><strong id="PC">0000</strong><div class="reg-bottom"><span>4-BIT</span><span id="pcHex">0H</span></div></div>
+        <div class="register-card"><div class="reg-top"><span>MEMORY ADDRESS</span><b>MAR</b></div><strong id="MAR">0000</strong><div class="reg-bottom"><span>4-BIT</span><span id="marHex">0H</span></div></div>
+        <div class="register-card"><div class="reg-top"><span>INSTRUCTION</span><b>IR</b></div><strong id="IR">00000000</strong><div class="reg-bottom"><span>8-BIT</span><span id="irHex">00H</span></div></div>
+        <div class="register-card accent-card"><div class="reg-top"><span>ACCUMULATOR</span><b>A</b></div><strong id="A">00000000</strong><div class="reg-bottom"><span>8-BIT</span><span id="aHex">00H</span></div></div>
+        <div class="register-card"><div class="reg-top"><span>B REGISTER</span><b>B</b></div><strong id="B">00000000</strong><div class="reg-bottom"><span>8-BIT</span><span id="bHex">00H</span></div></div>
+        <div class="register-card output-card"><div class="reg-top"><span>OUTPUT REGISTER</span><b>OUT</b></div><strong id="OUT">00000000</strong><div class="reg-bottom"><span>8-BIT</span><span id="outHex">00H</span></div></div>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <article class="panel memory-panel">
+        <div class="section-heading"><div><span class="section-kicker">04 / MAIN MEMORY</span><h2>RAM overview</h2></div><span class="memory-tag">16 × 8 BIT</span></div>
+        <div class="table-scroll"><table><thead><tr><th>ADDRESS</th><th>HEX DATA</th><th>BINARY DATA</th><th>TYPE</th></tr></thead><tbody id="memoryTable"></tbody></table></div>
+        <div class="table-legend"><span><i class="legend-dot active-dot"></i> Current memory address</span><span><i class="legend-dot data-dot"></i> User data</span></div>
+      </article>
+      <div class="side-stack">
+        <article class="panel bus-panel">
+          <div class="section-heading"><div><span class="section-kicker">05 / DATA TRANSFER</span><h2>W-Bus activity</h2></div><span class="bus-symbol">↔</span></div>
+          <div class="bus-visual"><span class="bus-node">CPU</span><div class="bus-line"><i id="busPulse"></i></div><span class="bus-node">RAM</span></div>
+          <p id="bus">Waiting for an instruction...</p>
+        </article>
+        <article class="panel output-panel">
+          <div class="section-heading"><div><span class="section-kicker">06 / RESULT</span><h2>Output LEDs</h2></div><span class="led-status" id="ledStatus">0x00</span></div>
+          <div class="led-row" id="leds"></div>
+          <div class="output-result"><span>OUTPUT VALUE</span><strong id="outputHex">00H</strong></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel log-panel">
+      <div class="section-heading"><div><span class="section-kicker">07 / SYSTEM FEEDBACK</span><h2>Execution log</h2></div><button class="clear-log" id="clearLogBtn">CLEAR LOG ×</button></div>
+      <div id="log" class="log-content"><div class="log-empty">No activity yet. Load a program to see the CPU's execution history.</div></div>
+    </section>
+
+    <footer><span>SAP·LAB <b>—</b> EDUCATIONAL SIMULATOR</span><span>BUILT FOR COMPUTER ARCHITECTURE & ORGANIZATION</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
